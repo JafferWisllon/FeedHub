@@ -1,4 +1,4 @@
-﻿impnamespace FeedHub.API.Models;
+﻿namespace FeedHub.API.Models;
 
 public class Feed
 {
