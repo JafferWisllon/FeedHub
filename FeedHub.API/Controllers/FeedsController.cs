@@ -1,8 +1,6 @@
-using FeedHub.API.Data;
 using FeedHub.API.Dtos;
-using FeedHub.API.Models;
+using FeedHub.API.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace FeedHub.API.Controllers;
 
@@ -10,34 +8,24 @@ namespace FeedHub.API.Controllers;
 [Route("api/feeds")]
 public class FeedsController : ControllerBase
 {
-    private readonly ApiDbContext _context;
+    private readonly IFeedService _feedService;
 
-    public FeedsController(ApiDbContext context)
-    {
-        _context = context;
-    }
+    public FeedsController(IFeedService feedService) 
+        => _feedService = feedService;
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesDefaultResponseType]
     public async Task<ActionResult> Create([FromBody] CreateFeedDto request)
     {
-        var feed = new Feed
-        {
-            Url = request.Url,
-            Name = request.Name,
-        };
-
-        _context.Feeds.Add(feed);
-        await _context.SaveChangesAsync();
-
+        var feed = await _feedService.AddAsync(request);
         return CreatedAtAction(nameof(Get), new { id = feed.Id }, feed);
     }
 
     [HttpGet]
     public async Task<ActionResult> List()
     {
-        return Ok(await _context.Feeds.ToListAsync());
+        return Ok(await _feedService.ListAsync());
     }
 
     [HttpGet("{id:int}")]
@@ -46,7 +34,7 @@ public class FeedsController : ControllerBase
     [ProducesDefaultResponseType]
     public async Task<ActionResult> Get(int id)
     {
-        var feed = await _context.Feeds.FindAsync(id);
+        var feed = await _feedService.GetById(id);
         if (feed is null) return NotFound();
         return Ok(feed);
     }

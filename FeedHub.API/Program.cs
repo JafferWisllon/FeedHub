@@ -1,4 +1,5 @@
 using FeedHub.API.Data;
+using FeedHub.API.Services;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -8,6 +9,8 @@ builder.Services.AddDbContext<ApiDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddScoped<IFeedService, FeedService>();
 
 builder.Services.AddControllers();
 
