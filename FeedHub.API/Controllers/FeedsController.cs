@@ -1,4 +1,5 @@
 using FeedHub.API.Dtos;
+using FeedHub.API.Exceptions;
 using FeedHub.API.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,8 +19,15 @@ public class FeedsController : ControllerBase
     [ProducesDefaultResponseType]
     public async Task<ActionResult> Create([FromBody] CreateFeedDto request)
     {
-        var feed = await _feedService.AddAsync(request);
-        return CreatedAtAction(nameof(Get), new { id = feed.Id }, feed);
+        try
+        {
+            var feed = await _feedService.AddAsync(request);
+            return CreatedAtAction(nameof(Get), new { id = feed.Id }, feed);
+        }
+        catch (AlreadyExistsException e)
+        {
+            return ValidationProblem(e.Message);
+        }        
     }
 
     [HttpGet]

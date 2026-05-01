@@ -1,5 +1,6 @@
 ﻿using FeedHub.API.Data;
 using FeedHub.API.Dtos;
+using FeedHub.API.Exceptions;
 using FeedHub.API.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +15,11 @@ public class FeedService : IFeedService
 
     public async Task<Feed> AddAsync(CreateFeedDto request)
     {
+        var feedExists = _context.Feeds.FirstOrDefault(f => f.Url == request.Url);
+
+        if (feedExists is not null)
+            throw new AlreadyExistsException("Feed already exists");
+
         var feed = new Feed
         {
             Url = request.Url,
