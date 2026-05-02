@@ -5,7 +5,6 @@ namespace FeedHub.API.Dtos
     public class CreateFeedDto
     {
         [Required]
-        [Url]
         [StringLength(2048)]
         public string Url { get; set; }
 

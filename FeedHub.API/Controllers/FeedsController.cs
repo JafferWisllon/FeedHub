@@ -16,6 +16,8 @@ public class FeedsController : ControllerBase
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesDefaultResponseType]
     public async Task<ActionResult> Create([FromBody] CreateFeedDto request)
     {
@@ -24,9 +26,13 @@ public class FeedsController : ControllerBase
             var feed = await _feedService.AddAsync(request);
             return CreatedAtAction(nameof(Get), new { id = feed.Id }, feed);
         }
+        catch (InvalidFeedUrlException e)
+        {
+            return ValidationProblem(e.Message, statusCode: StatusCodes.Status400BadRequest);
+        }
         catch (AlreadyExistsException e)
         {
-            return ValidationProblem(e.Message);
+            return ValidationProblem(e.Message, statusCode: StatusCodes.Status409Conflict);
         }        
     }
 
