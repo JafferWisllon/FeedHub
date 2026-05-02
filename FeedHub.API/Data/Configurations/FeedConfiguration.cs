@@ -14,5 +14,10 @@ public class FeedConfiguration : IEntityTypeConfiguration<Feed>
         builder.Property(x => x.Name).HasColumnType("VARCHAR(100)").IsRequired(false);
         builder.Property(x => x.CreatedAt).HasDefaultValueSql("GETDATE()").ValueGeneratedOnAdd();
         builder.Property(x => x.UpdatedAt).HasDefaultValueSql("GETDATE()").ValueGeneratedOnAdd();
+
+        builder.HasMany(x => x.FeedItems)
+            .WithOne(x => x.Feed)
+            .HasForeignKey(x => x.FeedId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

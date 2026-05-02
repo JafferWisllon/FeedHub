@@ -10,6 +10,7 @@ public class ApiDbContext : DbContext
     }
 
     public DbSet<Feed> Feeds { get; set; }
+    public DbSet<FeedItem> FeedItems { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

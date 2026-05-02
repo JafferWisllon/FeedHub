@@ -41,6 +41,17 @@ public class FeedService : IFeedService
     public async Task<IEnumerable<Feed>> ListAsync() 
         => await _context.Feeds.ToListAsync();
 
+    public async Task<IList<FeedItemResponseDto>> GetFeedItemsAsync(int id)
+    {
+        var feedExists = await _context.Feeds.AnyAsync(x => x.Id == id);
+
+        if (feedExists is false)
+            throw new FeedNotFoundException("Feed not found");
+
+        var items = await _context.FeedItems.Where(x => x.FeedId == id).ToListAsync();
+        return FeedItemResponseDto.FromEntity(items);
+    }
+
     private bool ValidateUrl(string url)
     {
         if (string.IsNullOrWhiteSpace(url))

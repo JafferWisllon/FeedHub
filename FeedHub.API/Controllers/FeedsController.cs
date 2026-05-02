@@ -32,7 +32,7 @@ public class FeedsController : ControllerBase
         }
         catch (AlreadyExistsException e)
         {
-            return ValidationProblem(e.Message, statusCode: StatusCodes.Status409Conflict);
+            return Conflict(new { message = e.Message });
         }        
     }
 
@@ -51,5 +51,21 @@ public class FeedsController : ControllerBase
         var feed = await _feedService.GetById(id);
         if (feed is null) return NotFound();
         return Ok(feed);
+    }
+
+    [HttpGet("{id:int}/items")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary), StatusCodes.Status400BadRequest)]
+    [ProducesDefaultResponseType]
+    public async Task<ActionResult> GetItems(int id)
+    {
+        try
+        {
+            return Ok(await _feedService.GetFeedItemsAsync(id));
+        }
+        catch (FeedNotFoundException e)
+        {
+            return NotFound(new { message = e.Message });
+        }        
     }
 }
