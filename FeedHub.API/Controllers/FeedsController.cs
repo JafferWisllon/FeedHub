@@ -68,4 +68,31 @@ public class FeedsController : ControllerBase
             return NotFound(new { message = e.Message });
         }        
     }
+
+    [HttpPost("/feeds/{id}/refresh")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status502BadGateway)]
+    [ProducesDefaultResponseType]
+    public async Task<ActionResult> Refresh(int id)
+    {
+        try
+        {
+            var feeds = await _feedService.RefreshFeedAsync(id);
+
+            return Ok(feeds);
+
+        }
+        catch (FeedNotFoundException e)
+        {
+            return NotFound(new { message = e.Message });
+        }
+        catch(FeedFetchException e)
+        {
+            return new ObjectResult(new { message = e.Message, detail = e.InnerException?.Message })
+            {
+                StatusCode = StatusCodes.Status502BadGateway
+            };
+        }
+    }
 }

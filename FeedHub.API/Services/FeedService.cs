@@ -1,8 +1,9 @@
-﻿using FeedHub.API.Data;
+﻿using CodeHollow.FeedReader;
+using FeedHub.API.Data;
 using FeedHub.API.Dtos;
 using FeedHub.API.Exceptions;
-using FeedHub.API.Models;
 using Microsoft.EntityFrameworkCore;
+using Feed = FeedHub.API.Models.Feed;
 
 namespace FeedHub.API.Services;
 
@@ -50,6 +51,25 @@ public class FeedService : IFeedService
 
         var items = await _context.FeedItems.Where(x => x.FeedId == id).ToListAsync();
         return FeedItemResponseDto.FromEntity(items);
+    }
+
+    public async Task<IList<FeedItemResponseDto>> RefreshFeedAsync(int id)
+    {
+        var response = new List<FeedItemResponseDto>();
+        var feed = await _context.Feeds.FindAsync(id);
+
+        if (feed is null)
+            throw new FeedNotFoundException("Feed not found");
+
+        try
+        {
+            var feedReader = await FeedReader.ReadAsync(feed.Url);
+            return FeedItemResponseDto.FromFeedReader(feedReader.Items);
+        }
+        catch (Exception e)
+        {
+            throw new FeedFetchException("Error to get Feed RSS", e);
+        }
     }
 
     private bool ValidateUrl(string url)

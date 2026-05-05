@@ -1,4 +1,5 @@
 ﻿using FeedHub.API.Models;
+using FeedReaderItem = CodeHollow.FeedReader.FeedItem;
 
 namespace FeedHub.API.Dtos;
 
@@ -20,6 +21,25 @@ public class FeedItemResponseDto
                 Title = item.Title,
                 Link = item.Link,
                 PublishAt = item.PublishAt,
+            });
+        }
+        return response;
+    }
+
+    public static List<FeedItemResponseDto> FromFeedReader(IList<FeedReaderItem> feedItems)
+    {
+        var response = new List<FeedItemResponseDto>();
+
+        foreach (var item in feedItems)
+        {
+            if (string.IsNullOrEmpty(item.Title) || string.IsNullOrEmpty(item.Link))
+                continue;
+
+            response.Add(new FeedItemResponseDto
+            {
+                Link = item.Link,
+                Title = item.Title,
+                PublishAt = item.PublishingDate
             });
         }
         return response;
