@@ -1,5 +1,4 @@
 using FeedHub.API.Dtos;
-using FeedHub.API.Exceptions;
 using FeedHub.API.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,19 +20,8 @@ public class FeedsController : ControllerBase
     [ProducesDefaultResponseType]
     public async Task<ActionResult> Create([FromBody] CreateFeedDto request)
     {
-        try
-        {
-            var feed = await _feedService.AddAsync(request);
-            return CreatedAtAction(nameof(Get), new { id = feed.Id }, feed);
-        }
-        catch (InvalidFeedUrlException e)
-        {
-            return ValidationProblem(e.Message, statusCode: StatusCodes.Status400BadRequest);
-        }
-        catch (AlreadyExistsException e)
-        {
-            return Conflict(new { message = e.Message });
-        }        
+        var feed = await _feedService.AddAsync(request);
+        return CreatedAtAction(nameof(Get), new { id = feed.Id }, feed);  
     }
 
     [HttpGet]
@@ -48,9 +36,7 @@ public class FeedsController : ControllerBase
     [ProducesDefaultResponseType]
     public async Task<ActionResult> Get(int id)
     {
-        var feed = await _feedService.GetById(id);
-        if (feed is null) return NotFound();
-        return Ok(feed);
+        return Ok(await _feedService.GetById(id));
     }
 
     [HttpGet("{id:int}/items")]
@@ -59,14 +45,7 @@ public class FeedsController : ControllerBase
     [ProducesDefaultResponseType]
     public async Task<ActionResult> GetItems(int id)
     {
-        try
-        {
-            return Ok(await _feedService.GetFeedItemsAsync(id));
-        }
-        catch (FeedNotFoundException e)
-        {
-            return NotFound(new { message = e.Message });
-        }        
+        return Ok(await _feedService.GetFeedItemsAsync(id));
     }
 
     [HttpPost("/feeds/{id}/refresh")]
@@ -76,23 +55,6 @@ public class FeedsController : ControllerBase
     [ProducesDefaultResponseType]
     public async Task<ActionResult> Refresh(int id)
     {
-        try
-        {
-            var feeds = await _feedService.RefreshFeedAsync(id);
-
-            return Ok(feeds);
-
-        }
-        catch (FeedNotFoundException e)
-        {
-            return NotFound(new { message = e.Message });
-        }
-        catch(FeedFetchException e)
-        {
-            return new ObjectResult(new { message = e.Message, detail = e.InnerException?.Message })
-            {
-                StatusCode = StatusCodes.Status502BadGateway
-            };
-        }
+        return Ok(await _feedService.RefreshFeedAsync(id));
     }
 }

@@ -1,4 +1,5 @@
 using FeedHub.API.Data;
+using FeedHub.API.Middlewares;
 using FeedHub.API.Services;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
@@ -23,6 +24,8 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference();
 }
+
+app.UseMiddleware<ApiExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 

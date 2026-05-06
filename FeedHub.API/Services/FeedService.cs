@@ -36,8 +36,14 @@ public class FeedService : IFeedService
         return feed;
     }
 
-    public async Task<Feed> GetById(int id) 
-        => await _context.Feeds.FindAsync(id);
+    public async Task<Feed> GetById(int id)
+    {
+        var feed = await _context.Feeds.FindAsync(id);
+        if (feed is null)
+            throw new FeedNotFoundException($"Feed with id {id} not found");
+
+        return feed;
+    }
 
     public async Task<IEnumerable<Feed>> ListAsync() 
         => await _context.Feeds.ToListAsync();
@@ -47,7 +53,7 @@ public class FeedService : IFeedService
         var feedExists = await _context.Feeds.AnyAsync(x => x.Id == id);
 
         if (feedExists is false)
-            throw new FeedNotFoundException("Feed not found");
+            throw new FeedNotFoundException($"Feed with id {id} not found");
 
         var items = await _context.FeedItems.Where(x => x.FeedId == id).ToListAsync();
         return FeedItemResponseDto.FromEntity(items);
@@ -59,7 +65,7 @@ public class FeedService : IFeedService
         var feed = await _context.Feeds.FindAsync(id);
 
         if (feed is null)
-            throw new FeedNotFoundException("Feed not found");
+            throw new FeedNotFoundException($"Feed with id {id} not found");
 
         try
         {
