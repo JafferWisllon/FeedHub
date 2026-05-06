@@ -1,4 +1,4 @@
-using FeedHub.API.Data;
+using FeedHub.API.Data.Context;
 using FeedHub.API.Middlewares;
 using FeedHub.API.Services;
 using Microsoft.EntityFrameworkCore;

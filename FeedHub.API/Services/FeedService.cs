@@ -1,5 +1,5 @@
 ﻿using CodeHollow.FeedReader;
-using FeedHub.API.Data;
+using FeedHub.API.Data.Context;
 using FeedHub.API.Dtos;
 using FeedHub.API.Exceptions;
 using Microsoft.EntityFrameworkCore;

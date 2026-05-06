@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace FeedHub.API.Migrations
+namespace FeedHub.API.Data.Migrations
 {
     /// <inheritdoc />
     public partial class FeedItems : Migration

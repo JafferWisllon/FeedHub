@@ -1,7 +1,7 @@
 ﻿using FeedHub.API.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace FeedHub.API.Data;
+namespace FeedHub.API.Data.Context;
 
 public class ApiDbContext : DbContext
 {
