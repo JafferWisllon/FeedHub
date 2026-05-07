@@ -1,6 +1,7 @@
 using FeedHub.API.Data.Context;
 using FeedHub.API.Middlewares;
 using FeedHub.API.Services;
+using FeedHub.API.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -12,6 +13,7 @@ builder.Services.AddDbContext<ApiDbContext>(options =>
 });
 
 builder.Services.AddScoped<IFeedService, FeedService>();
+builder.Services.AddScoped<IRssService, RssService>();
 
 builder.Services.AddControllers();
 

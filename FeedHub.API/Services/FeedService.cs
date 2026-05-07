@@ -1,22 +1,27 @@
-﻿using CodeHollow.FeedReader;
-using FeedHub.API.Data.Context;
+﻿using FeedHub.API.Data.Context;
 using FeedHub.API.Dtos;
 using FeedHub.API.Exceptions;
+using FeedHub.API.Mappings;
+using FeedHub.API.Models;
+using FeedHub.API.Services.Interfaces;
+using FeedHub.API.Validators;
 using Microsoft.EntityFrameworkCore;
-using Feed = FeedHub.API.Models.Feed;
 
 namespace FeedHub.API.Services;
 
 public class FeedService : IFeedService
 {
     private readonly ApiDbContext _context;
-
-    public FeedService(ApiDbContext context) 
-        => _context = context;
+    private readonly IRssService _rssService;
+    public FeedService(ApiDbContext context, IRssService rssService)
+    {
+        _context = context;
+        _rssService = rssService;
+    }
 
     public async Task<Feed> AddAsync(CreateFeedDto request)
     {
-        var urlValid = ValidateUrl(request.Url);
+        var urlValid = UrlValidator.ValidateUrl(request.Url);
         if (!urlValid)
             throw new InvalidFeedUrlException("The Url field is not a valid fully-qualified http, https URL");
 
@@ -56,7 +61,7 @@ public class FeedService : IFeedService
             throw new FeedNotFoundException($"Feed with id {id} not found");
 
         var items = await _context.FeedItems.Where(x => x.FeedId == id).ToListAsync();
-        return FeedItemResponseDto.FromEntity(items);
+        return FeedItemEntityMappings.ToDto(items);
     }
 
     public async Task<IList<FeedItemResponseDto>> RefreshFeedAsync(int id)
@@ -67,26 +72,6 @@ public class FeedService : IFeedService
         if (feed is null)
             throw new FeedNotFoundException($"Feed with id {id} not found");
 
-        try
-        {
-            var feedReader = await FeedReader.ReadAsync(feed.Url);
-            return FeedItemResponseDto.FromFeedReader(feedReader.Items);
-        }
-        catch (Exception e)
-        {
-            throw new FeedFetchException("Error to get Feed RSS", e);
-        }
-    }
-
-    private bool ValidateUrl(string url)
-    {
-        if (string.IsNullOrWhiteSpace(url))
-            return false;
-
-        if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
-            return false;
-
-        return uri.Scheme.Equals(Uri.UriSchemeHttp, StringComparison.OrdinalIgnoreCase)
-            || uri.Scheme.Equals(Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase);
+        return await _rssService.GetFeedItemsAsync(feed.Url);
     }
 }

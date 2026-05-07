@@ -1,5 +1,5 @@
 using FeedHub.API.Dtos;
-using FeedHub.API.Services;
+using FeedHub.API.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FeedHub.API.Controllers;

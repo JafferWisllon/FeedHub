@@ -1,7 +1,7 @@
 ﻿using FeedHub.API.Dtos;
 using FeedHub.API.Models;
 
-namespace FeedHub.API.Services;
+namespace FeedHub.API.Services.Interfaces;
 
 public interface IFeedService
 {
