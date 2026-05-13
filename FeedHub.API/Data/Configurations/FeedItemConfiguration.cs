@@ -13,5 +13,9 @@ public class FeedItemConfiguration : IEntityTypeConfiguration<FeedItem>
         builder.Property(x => x.Title).HasColumnType("NVARCHAR(300)").IsRequired();
         builder.Property(x => x.Link).HasColumnType("NVARCHAR(1000)").IsRequired();
         builder.Property(X => X.PublishAt).IsRequired(false);
+
+        builder.HasIndex(p => new { p.FeedId, p.Link })
+            .HasDatabaseName("IX_FeedItems_FeedId_Link")
+            .IsUnique();
     }
 }

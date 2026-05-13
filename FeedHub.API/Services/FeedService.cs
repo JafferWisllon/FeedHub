@@ -64,17 +64,30 @@ public class FeedService : IFeedService
         return FeedItemEntityMappings.ToDto(items);
     }
 
-    public async Task<IList<FeedItemResponseDto>> RefreshFeedAsync(int id)
+    public async Task<RefreshFeedDto> RefreshFeedAsync(int id)
     {
-        var feed = await _context.Feeds.FindAsync(id);
+        var feed = await _context
+            .Feeds
+            .Include(f => f.FeedItems)
+            .FirstOrDefaultAsync(f => f.Id == id);
 
         if (feed is null)
             throw new FeedNotFoundException($"Feed with id {id} not found");
 
         var feedItems = await _rssService.GetFeedItemsAsync(feed.Url, feed.Id);
-        _context.AddRange(feedItems);
+
+        var existingFeedsItems = feed
+            .FeedItems
+            .Select(x => x.Link)
+            .ToHashSet();
+
+        var remaining = feedItems
+            .Where(x => !existingFeedsItems.Contains(x.Link))
+            .ToList();
+
+        _context.AddRange(remaining);
         await _context.SaveChangesAsync();
 
-        return FeedItemEntityMappings.ToDto(feedItems);
+        return new RefreshFeedDto(feedItems.Count(), remaining.Count());
     }
 }
