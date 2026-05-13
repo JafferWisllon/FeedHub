@@ -66,12 +66,15 @@ public class FeedService : IFeedService
 
     public async Task<IList<FeedItemResponseDto>> RefreshFeedAsync(int id)
     {
-        var response = new List<FeedItemResponseDto>();
         var feed = await _context.Feeds.FindAsync(id);
 
         if (feed is null)
             throw new FeedNotFoundException($"Feed with id {id} not found");
 
-        return await _rssService.GetFeedItemsAsync(feed.Url);
+        var feedItems = await _rssService.GetFeedItemsAsync(feed.Url, feed.Id);
+        _context.AddRange(feedItems);
+        await _context.SaveChangesAsync();
+
+        return FeedItemEntityMappings.ToDto(feedItems);
     }
 }

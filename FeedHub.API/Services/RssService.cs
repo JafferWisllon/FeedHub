@@ -3,17 +3,18 @@ using FeedHub.API.Dtos;
 using FeedHub.API.Exceptions;
 using FeedHub.API.Mappings;
 using FeedHub.API.Services.Interfaces;
+using FeedItemEntity = FeedHub.API.Models.FeedItem;
 
 namespace FeedHub.API.Services;
 
 public class RssService : IRssService
 {
-    public async Task<IList<FeedItemResponseDto>> GetFeedItemsAsync(string url)
+    public async Task<IList<FeedItemEntity>> GetFeedItemsAsync(string url, int feedId)
     {
         try
         {
             var feedReader = await FeedReader.ReadAsync(url);
-            return FeedItemRssMappings.ToDto(feedReader.Items);
+            return FeedItemRssMappings.ToEntity(feedReader.Items, feedId);
         }
         catch (Exception e)
         {

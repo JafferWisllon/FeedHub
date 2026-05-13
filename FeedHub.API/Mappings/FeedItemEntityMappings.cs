@@ -5,7 +5,7 @@ namespace FeedHub.API.Mappings;
 
 public class FeedItemEntityMappings
 {
-    public static List<FeedItemResponseDto> ToDto(List<FeedItem> items)
+    public static List<FeedItemResponseDto> ToDto(IList<FeedItem> items)
     {
         var response = new List<FeedItemResponseDto>();
         foreach (var item in items)
@@ -15,7 +15,7 @@ public class FeedItemEntityMappings
                 Id = item.Id,
                 Title = item.Title,
                 Link = item.Link,
-                PublishAt = item.PublishAt,
+                PublishAt = item.PublishAt
             });
         }
         return response;
