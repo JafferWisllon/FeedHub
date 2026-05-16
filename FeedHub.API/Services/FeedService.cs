@@ -53,15 +53,33 @@ public class FeedService : IFeedService
     public async Task<IEnumerable<Feed>> ListAsync() 
         => await _context.Feeds.ToListAsync();
 
-    public async Task<IList<FeedItemResponseDto>> GetFeedItemsAsync(int id)
+    public async Task<PaginatedFeedItemsResponseDto> GetFeedItemsAsync(int id, int page, int pageSize)
     {
+        if (page <= 0 || pageSize <= 0)
+            throw new BadRequestException("Invalid query params");
+
         var feedExists = await _context.Feeds.AnyAsync(x => x.Id == id);
 
         if (feedExists is false)
             throw new FeedNotFoundException($"Feed with id {id} not found");
 
-        var items = await _context.FeedItems.Where(x => x.FeedId == id).ToListAsync();
-        return FeedItemEntityMappings.ToDto(items);
+        var totalCount = await _context.FeedItems.AsNoTracking().Where(x => x.FeedId == id).CountAsync();
+        var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+
+        var offset = (page - 1) * pageSize;
+
+        var items = await _context
+            .FeedItems
+            .AsNoTracking()
+            .Where(x => x.FeedId == id)
+            .OrderByDescending(i => i.PublishAt)
+            .Skip(offset)
+            .Take(pageSize)
+            .ToListAsync();
+
+        var nextPage = NextPage(totalPages, page, pageSize, id);
+
+        return new PaginatedFeedItemsResponseDto(page, pageSize, totalCount, totalPages, nextPage, FeedItemEntityMappings.ToDto(items));
     }
 
     public async Task<RefreshFeedDto> RefreshFeedAsync(int id)
@@ -89,5 +107,13 @@ public class FeedService : IFeedService
         await _context.SaveChangesAsync();
 
         return new RefreshFeedDto(feedItems.Count(), remaining.Count());
+    }
+
+    private string? NextPage(int totalPages, int page, int pageSize, int feedId)
+    {
+        if (page >= totalPages)
+            return null;
+
+        return $"GET /feeds/{feedId}/items?page={page+1}&pageSize={pageSize}";
     }
 }

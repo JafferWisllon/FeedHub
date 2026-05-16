@@ -43,9 +43,9 @@ public class FeedsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary), StatusCodes.Status400BadRequest)]
     [ProducesDefaultResponseType]
-    public async Task<ActionResult> GetItems(int id)
+    public async Task<ActionResult> GetItems(int id, [FromQuery] GetItemsQueryParams queryParams)
     {
-        return Ok(await _feedService.GetFeedItemsAsync(id));
+        return Ok(await _feedService.GetFeedItemsAsync(id, queryParams.Page, queryParams.PageSize));
     }
 
     [HttpPost("/feeds/{id}/refresh")]

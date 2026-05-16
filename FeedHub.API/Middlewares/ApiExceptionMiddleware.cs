@@ -25,6 +25,7 @@ public class ApiExceptionMiddleware
                 FeedNotFoundException => StatusCodes.Status404NotFound,
                 AlreadyExistsException => StatusCodes.Status409Conflict,
                 FeedFetchException => StatusCodes.Status502BadGateway,
+                BadRequestException => StatusCodes.Status400BadRequest,
                 _ => StatusCodes.Status500InternalServerError
             };
             
