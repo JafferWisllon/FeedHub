@@ -1,0 +1,21 @@
+﻿using FeedHub.Domain.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace FeedHub.Infrastructure.Data.Configurations;
+
+public class FeedItemConfiguration : IEntityTypeConfiguration<FeedItem>
+{
+    public void Configure(EntityTypeBuilder<FeedItem> builder)
+    {
+        builder.ToTable("FeedItens");
+        builder.HasKey(x => x.Id);
+        builder.Property(x => x.Title).HasColumnType("NVARCHAR(300)").IsRequired();
+        builder.Property(x => x.Link).HasColumnType("NVARCHAR(1000)").IsRequired();
+        builder.Property(X => X.PublishAt).IsRequired(false);
+
+        builder.HasIndex(p => new { p.FeedId, p.Link })
+            .HasDatabaseName("IX_FeedItems_FeedId_Link")
+            .IsUnique();
+    }
+}

@@ -1,10 +1,8 @@
-using FeedHub.API.Data.Context;
-using FeedHub.API.Dtos;
-using FeedHub.API.Exceptions;
-using FeedHub.API.Models;
-using FeedHub.API.Services;
-using FeedHub.API.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
+using FeedHub.Application.Dtos;
+using FeedHub.Application.Exceptions;
+using FeedHub.Application.Services;
+using FeedHub.Domain.Models;
+using FeedHub.Domain.Repositories;
 using NSubstitute;
 using Shouldly;
 
@@ -12,23 +10,19 @@ namespace FeedHub.Tests.Services;
 
 public class FeedServiceTests
 {
-    private readonly DbContextOptions<ApiDbContext> _dbContextOptions;
-    private readonly ApiDbContext _context;
+    private readonly IFeedRepository _feedRepository;
     private readonly IRssService _rssService;
+    private readonly IUnitOfWork _unitOfWork;
+
     private readonly FeedService _sut;
 
     public FeedServiceTests()
     {
-        _dbContextOptions = new DbContextOptionsBuilder<ApiDbContext>()
-            .UseInMemoryDatabase(databaseName: "FeedHubDb")
-            .Options;
+        _feedRepository = Substitute.For<IFeedRepository>();
+        _unitOfWork = Substitute.For<IUnitOfWork>();
 
-        _context = new ApiDbContext(_dbContextOptions);
-        _context.Feeds.Add(new Feed() { Name = "feed", Url = "https://feed.com" });
-        _context.SaveChangesAsync();
-        
-        _rssService = Substitute.For<IRssService>();
-        _sut = new FeedService(_context, _rssService);
+         _rssService = Substitute.For<IRssService>();
+        _sut = new FeedService(_feedRepository, _rssService, _unitOfWork);
     }
 
     [Fact]

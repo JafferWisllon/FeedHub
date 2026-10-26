@@ -1,4 +1,4 @@
-﻿using FeedHub.API.Exceptions;
+﻿using FeedHub.Application.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FeedHub.API.Middlewares;

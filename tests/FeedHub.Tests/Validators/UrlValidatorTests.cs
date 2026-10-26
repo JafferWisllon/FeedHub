@@ -1,4 +1,4 @@
-using FeedHub.API.Validators;
+using FeedHub.Application.Validators;
 
 namespace FeedHub.Tests.Validators;
 

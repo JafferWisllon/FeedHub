@@ -48,21 +48,29 @@ The application allows users to register RSS feeds, synchronize external RSS con
 ```plaintext
 FeedHub.API
 ├── Controllers
-├── Data
-│   ├── Configurations
-│   ├── Context
-│   └── Migrations
+├── Middlewares
+└── Program.cs
+FeedHub.Application
 ├── Dtos
 ├── Exceptions
 ├── Mappings
-├── Middlewares
-├── Models
 ├── Services
 │   ├── Interfaces
 │   ├── FeedService
 │   └── RssService
 ├── Validators
-└── Program.cs
+└── DependencyInjection
+FeedHub.Domain
+├── Models
+└── Repositories
+FeedHub.Infra
+├── Data
+│   ├── Configurations
+│   ├── Context
+│   ├── Migrations
+│   └── Repositories  
+└── DependencyInjection
+
 ```
 
 ---
@@ -174,31 +182,4 @@ POST /feeds/{id}/refresh
     }
   ]
 }
-```
-
----
-
-## 🧭 Roadmap
-
-### 🚀 Next Features
-- Authentication & Authorization
-- Unit tests
-- Logging
-- Docker support
-- Docker Compose
-- CI/CD pipeline
-
-### 🌟 Future Improvements
-- API versioning
-- Background jobs for automatic refresh
-- Health checks
-- Filtering & search
-- Rate limiting
-- Caching
-
----
-
-## 📌 Status
-
-🚧 Active development
 ```
