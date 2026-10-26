@@ -1,4 +1,12 @@
 <Solution>
-  <Project Path="FeedHub.API/FeedHub.API.csproj" Id="a7d97734-82f8-435b-ae91-4adc4fa59a99" />
-  <Project Path="FeedHub.Tests/FeedHub.Tests.csproj" />
+  <Folder Name="/src/" />
+  <Folder Name="/src/Backend/">
+    <Project Path="src/Backend/FeedHub.API/FeedHub.API.csproj" />
+    <Project Path="src/Backend/FeedHub.Application/FeedHub.Application.csproj" />
+    <Project Path="src/Backend/FeedHub.Domain/FeedHub.Domain.csproj" />
+    <Project Path="src/Backend/FeedHub.Infrastructure/FeedHub.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/FeedHub.Tests/FeedHub.Tests.csproj" />
+  </Folder>
 </Solution>
