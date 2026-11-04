@@ -9,6 +9,8 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddApplication();
 
+builder.Services.AddAuthentication(builder.Configuration);
+
 builder.Services.AddControllers();
 
 builder.Services.AddOpenApi();
@@ -24,6 +26,10 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<ApiExceptionMiddleware>();
 
 app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

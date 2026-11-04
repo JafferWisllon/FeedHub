@@ -15,4 +15,10 @@ public class AuthController : ControllerBase
 
        return Ok(new { Message = "Usuario registrado com sucesso!" });
     }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginRequestDto request, [FromServices] IAuthService service)
+    {
+        return Ok(await service.LoginAsync(request));
+    }
 }
