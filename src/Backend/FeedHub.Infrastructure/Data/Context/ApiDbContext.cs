@@ -1,9 +1,10 @@
 ﻿using FeedHub.Domain.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace FeedHub.Infrastructure.Data.Context;
 
-internal class ApiDbContext : DbContext
+internal class ApiDbContext : IdentityDbContext<ApplicationUser>
 {
     public ApiDbContext(DbContextOptions<ApiDbContext> options) : base(options)
     {
@@ -14,6 +15,8 @@ internal class ApiDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApiDbContext).Assembly);
     }
 }

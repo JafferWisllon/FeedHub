@@ -1,10 +1,10 @@
-﻿using FeedHub.Domain.Repositories;
+﻿using FeedHub.Domain.Models;
+using FeedHub.Domain.Repositories;
 using FeedHub.Infrastructure.Data.Context;
 using FeedHub.Infrastructure.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
 namespace FeedHub.Infrastructure.Data;
 
 public static class DependencyInjection
@@ -20,5 +20,8 @@ public static class DependencyInjection
 
         services.AddScoped<IFeedRepository, FeedRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        services.AddIdentityCore<ApplicationUser>()
+            .AddEntityFrameworkStores<ApiDbContext>();
     }
 }

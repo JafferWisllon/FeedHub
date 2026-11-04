@@ -9,5 +9,6 @@ public static class DependencyInjection
     {
         services.AddScoped<IFeedService, FeedService>();
         services.AddScoped<IRssService, RssService>();
+        services.AddScoped<IAuthService, AuthService>();
     }
 }
