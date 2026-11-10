@@ -1,9 +1,9 @@
 ﻿using FeedHub.Application.Dtos;
-using FeedHub.Application.Exceptions;
 using FeedHub.Application.UseCases.Feed.GetById;
 using FeedHub.Application.UseCases.Feed.GetFeedItems;
 using FeedHub.Domain.Models;
 using FeedHub.Domain.Repositories;
+using FeedHub.Exception.ExceptionsBase;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Shouldly;
@@ -39,7 +39,8 @@ public class GetFeedItemsUseCaseTests
         });
 
         // Assert
-        exception.Message.ShouldBe("Invalid query params");
+        var errorMessages = exception.GetErrorMessages().First();
+        errorMessages.ShouldBe("Invalid query params");
     }
 
     [Fact]
@@ -61,7 +62,8 @@ public class GetFeedItemsUseCaseTests
         });
 
         // Assert
-        exception.Message.ShouldBe($"Feed with id {id} not found");
+        var errorMessages = exception.GetErrorMessages().First();
+        errorMessages.ShouldBe($"Feed with id {id} not found");
     }
 
     [Fact]

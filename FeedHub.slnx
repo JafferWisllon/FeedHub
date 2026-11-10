@@ -6,6 +6,9 @@
     <Project Path="src/Backend/FeedHub.Domain/FeedHub.Domain.csproj" />
     <Project Path="src/Backend/FeedHub.Infrastructure/FeedHub.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/src/Shared/">
+    <Project Path="src/Shared/FeedHub.Exception/FeedHub.Exception.csproj" Id="2a4c6cac-b449-4873-a0a8-be7f06360ebf" />
+  </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/UseCases.Tests/UseCases.Tests.csproj" Id="25966e69-86ac-4312-9f50-730996375b34" />
     <Project Path="tests/Validators.Tests/Validators.Tests.csproj" Id="14e785aa-c03d-4824-80a4-3654355f0207" />

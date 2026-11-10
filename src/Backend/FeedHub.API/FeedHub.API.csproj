@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Shared\FeedHub.Exception\FeedHub.Exception.csproj" />
     <ProjectReference Include="..\FeedHub.Application\FeedHub.Application.csproj" />
     <ProjectReference Include="..\FeedHub.Infrastructure\FeedHub.Infrastructure.csproj" />
   </ItemGroup>

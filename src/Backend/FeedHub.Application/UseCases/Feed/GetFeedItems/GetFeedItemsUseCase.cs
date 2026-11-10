@@ -1,8 +1,8 @@
 ﻿using FeedHub.Application.Dtos;
-using FeedHub.Application.Exceptions;
 using FeedHub.Application.Mappings;
 using FeedHub.Application.UseCases.Feed.GetById;
 using FeedHub.Domain.Repositories;
+using FeedHub.Exception.ExceptionsBase;
 
 namespace FeedHub.Application.UseCases.Feed.GetFeedItems;
 
@@ -19,7 +19,7 @@ public class GetFeedItemsUseCase : IGetFeedItemsUseCase
     public async Task<PaginatedFeedItemsResponseDto> Execute(int id, int page, int pageSize)
     {
         if (page <= 0 || pageSize <= 0)
-            throw new BadRequestException("Invalid query params");
+            throw new BadRequestException(["Invalid query params"]);
 
         var feed = await _getFeedByIdUseCase.Execute(id);
 

@@ -1,5 +1,6 @@
 ﻿using CodeHollow.FeedReader;
 using FeedHub.Domain.Rss;
+using FeedHub.Exception.ExceptionsBase;
 
 namespace FeedHub.Infrastructure.Rss;
 
@@ -12,9 +13,9 @@ public class RssService : IRssService
             var feedReader = await FeedReader.ReadAsync(url);
             return ToEntity(feedReader.Items, feedId);
         }
-        catch (Exception e)
+        catch
         {
-            throw new Exception("Error to get Feed RSS", e);
+            throw new FeedFetchException("Error to get on Feed RSS external service");
         }
     }
 
