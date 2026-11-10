@@ -1,6 +1,6 @@
 ﻿using FeedHub.Application.Dtos;
-using FeedHub.Application.Exceptions;
 using FeedHub.Domain.Models;
+using FeedHub.Exception.ExceptionsBase;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -24,11 +24,11 @@ public class AuthService : IAuthService
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
         if (user is null)
-            throw new BadRequestException("Invalid email/password");
+            throw new BadRequestException(["Invalid email/password"]);
 
         var passwordIsValid = await _userManager.CheckPasswordAsync(user, request.Password);
         if(!passwordIsValid)
-            throw new BadRequestException("Invalid email/password");
+            throw new BadRequestException(["Invalid email/password"]);
 
         var jwtSettings = _configuration.GetSection("JwtConfig");
         var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Secret"]!));
@@ -75,6 +75,6 @@ public class AuthService : IAuthService
 
         var result = await _userManager.CreateAsync(user, request.Password);
         if (!result.Succeeded)
-            throw new BadRequestException("Error payload");
+            throw new BadRequestException(["Error payload"]);
     }
 }

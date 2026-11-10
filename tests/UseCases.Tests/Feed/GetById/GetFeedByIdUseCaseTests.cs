@@ -1,6 +1,6 @@
-﻿using FeedHub.Application.Exceptions;
-using FeedHub.Application.UseCases.Feed.GetById;
+﻿using FeedHub.Application.UseCases.Feed.GetById;
 using FeedHub.Domain.Repositories;
+using FeedHub.Exception.ExceptionsBase;
 using NSubstitute;
 using Shouldly;
 
@@ -30,7 +30,8 @@ public class GetFeedByIdUseCaseTests
         });
 
         // Assert 
-        exception.Message.ShouldBe($"Feed with id {invalidFeedId} not found");
+        var errorMessages = exception.GetErrorMessages().First();
+        errorMessages.ShouldBe($"Feed with id {invalidFeedId} not found");
     }
 
     [Fact]

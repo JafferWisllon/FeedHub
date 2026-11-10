@@ -1,5 +1,5 @@
-﻿using FeedHub.Application.Exceptions;
-using FeedHub.Domain.Repositories;
+﻿using FeedHub.Domain.Repositories;
+using FeedHub.Exception.ExceptionsBase;
 
 namespace FeedHub.Application.UseCases.Feed.GetById;
 

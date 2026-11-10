@@ -1,7 +1,7 @@
-﻿using FeedHub.Application.Exceptions;
-using FeedHub.Application.UseCases.Feed.Refresh;
+﻿using FeedHub.Application.UseCases.Feed.Refresh;
 using FeedHub.Domain.Repositories;
 using FeedHub.Domain.Rss;
+using FeedHub.Exception.ExceptionsBase;
 using NSubstitute;
 using Shouldly;
 
@@ -36,6 +36,7 @@ public class RefreshFeedUseCaseTests
         });
 
         // Assert
-        exception.Message.ShouldBe($"Feed with id {id} not found");
+        var errorMessages = exception.GetErrorMessages().First();
+        errorMessages.ShouldBe($"Feed with id {id} not found");
     }
 }

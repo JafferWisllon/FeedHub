@@ -1,7 +1,7 @@
-using FeedHub.API.Middlewares;
+using FeedHub.API.Filters;
 using FeedHub.Application;
-using Scalar.AspNetCore;
 using FeedHub.Infrastructure;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +15,8 @@ builder.Services.AddControllers();
 
 builder.Services.AddOpenApi();
 
+builder.Services.AddMvc(options => options.Filters.Add<ExceptionFilter>());
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -22,8 +24,6 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference();
 }
-
-app.UseMiddleware<ApiExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 

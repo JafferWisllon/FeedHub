@@ -1,7 +1,7 @@
 ﻿using FeedHub.Application.Dtos;
-using FeedHub.Application.Exceptions;
 using FeedHub.Application.UseCases.Feed.Create;
 using FeedHub.Domain.Repositories;
+using FeedHub.Exception.ExceptionsBase;
 using NSubstitute;
 using Shouldly;
 
@@ -38,7 +38,8 @@ public class CreateFeedUseCaseTests
         });
 
         // Assert
-        exception.Message.ShouldBe("The Url field is not a valid fully-qualified http, https URL");
+        var errorMessages = exception.GetErrorMessages().First();
+        errorMessages.ShouldBe("The Url field is not a valid fully-qualified http, https URL");
     }
 
     [Fact]
@@ -60,7 +61,8 @@ public class CreateFeedUseCaseTests
         });
 
         // Assert
-        exception.Message.ShouldBe("Feed already exists");
+        var errorMessages = exception.GetErrorMessages().First();
+        errorMessages.ShouldBe("Feed already exists");
     }
 
     [Fact]
