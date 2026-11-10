@@ -17,7 +17,6 @@ public static class DependencyInjection
     public static void AddApplication(this IServiceCollection services)
     {
         services.AddUseCases();
-        services.AddScoped<IRssService, RssService>();
         services.AddScoped<IAuthService, AuthService>();
 
     }
