@@ -1,5 +1,9 @@
 using FeedHub.Application.Dtos;
-using FeedHub.Application.Services;
+using FeedHub.Application.UseCases.Feed.Create;
+using FeedHub.Application.UseCases.Feed.GetById;
+using FeedHub.Application.UseCases.Feed.GetFeedItems;
+using FeedHub.Application.UseCases.Feed.List;
+using FeedHub.Application.UseCases.Feed.Refresh;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FeedHub.API.Controllers;
@@ -8,53 +12,41 @@ namespace FeedHub.API.Controllers;
 [Route("api/feeds")]
 public class FeedsController : ControllerBase
 {
-    private readonly IFeedService _feedService;
-
-    public FeedsController(IFeedService feedService) 
-        => _feedService = feedService;
-
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesDefaultResponseType]
-    public async Task<ActionResult> Create([FromBody] CreateFeedDto request)
+    public async Task<ActionResult> Create([FromServices] ICreateFeedUseCase useCase, 
+        [FromBody] CreateFeedDto request)
     {
-        var feed = await _feedService.AddAsync(request);
+        var feed = await useCase.Execute(request);
         return CreatedAtAction(nameof(Get), new { id = feed.Id }, feed);  
     }
 
     [HttpGet]
-    public async Task<ActionResult> List()
-    {
-        return Ok(await _feedService.ListAsync());
-    }
+    public async Task<ActionResult> List([FromServices] IListFeedsUseCase useCase) 
+        => Ok(await useCase.Execute());
 
     [HttpGet("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesDefaultResponseType]
-    public async Task<ActionResult> Get(int id)
-    {
-        return Ok(await _feedService.GetById(id));
-    }
+    public async Task<ActionResult> Get([FromServices] IGetFeedByIdUseCase useCase, int id) 
+        => Ok(await useCase.Execute(id));
 
     [HttpGet("{id:int}/items")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary), StatusCodes.Status400BadRequest)]
     [ProducesDefaultResponseType]
-    public async Task<ActionResult> GetItems(int id, [FromQuery] GetItemsQueryParams queryParams)
-    {
-        return Ok(await _feedService.GetFeedItemsAsync(id, queryParams.Page, queryParams.PageSize));
-    }
+    public async Task<ActionResult> GetItems([FromServices] IGetFeedItemsUseCase useCase, int id, [FromQuery] GetItemsQueryParams queryParams) 
+        => Ok(await useCase.Execute(id, queryParams.Page, queryParams.PageSize));
 
     [HttpPost("/feeds/{id}/refresh")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status502BadGateway)]
     [ProducesDefaultResponseType]
-    public async Task<ActionResult> Refresh(int id)
-    {
-        return Ok(await _feedService.RefreshFeedAsync(id));
-    }
+    public async Task<ActionResult> Refresh([FromServices] IRefreshFeedUseCase useCase, int id) 
+        => Ok(await useCase.Execute(id));
 }

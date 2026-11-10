@@ -1,4 +1,9 @@
 ﻿using FeedHub.Application.Services;
+using FeedHub.Application.UseCases.Feed.Create;
+using FeedHub.Application.UseCases.Feed.GetById;
+using FeedHub.Application.UseCases.Feed.GetFeedItems;
+using FeedHub.Application.UseCases.Feed.List;
+using FeedHub.Application.UseCases.Feed.Refresh;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,11 +16,11 @@ public static class DependencyInjection
 {
     public static void AddApplication(this IServiceCollection services)
     {
-        services.AddScoped<IFeedService, FeedService>();
+        services.AddUseCases();
         services.AddScoped<IRssService, RssService>();
         services.AddScoped<IAuthService, AuthService>();
-    }
 
+    }
     public static void AddAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
         var jwtSettings = configuration.GetSection("JwtConfig");
@@ -42,5 +47,14 @@ public static class DependencyInjection
                 ClockSkew = TimeSpan.Zero
             };
         });
+    }
+
+    private static void AddUseCases(this IServiceCollection services)
+    {
+        services.AddScoped<ICreateFeedUseCase, CreateFeedUseCase>();
+        services.AddScoped<IGetFeedByIdUseCase, GetFeedByIdUseCase>();
+        services.AddScoped<IGetFeedItemsUseCase, GetFeedItemsUseCase>();
+        services.AddScoped<IListFeedsUseCase, ListFeedsUseCase>();
+        services.AddScoped<IRefreshFeedUseCase, RefreshFeedUseCase>();
     }
 }

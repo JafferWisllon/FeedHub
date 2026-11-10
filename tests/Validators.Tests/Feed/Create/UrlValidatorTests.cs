@@ -1,10 +1,9 @@
-using FeedHub.Application.Validators;
+﻿using FeedHub.Application.UseCases.Feed.Create;
 
-namespace FeedHub.Tests.Validators;
+namespace Validators.Tests.Feed.Create;
 
 public class UrlValidatorTests
 {
-
     [Fact]
     public void Should_Returns_False_When_Given_Empty_String()
     {
@@ -18,7 +17,7 @@ public class UrlValidatorTests
         var result = UrlValidator.ValidateUrl("invalid-url");
         Assert.False(result);
     }
-    
+
     [Fact]
     public void Should_Returns_True_When_Given_Https_Url()
     {

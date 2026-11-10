@@ -1,4 +1,4 @@
-﻿namespace FeedHub.Application.Validators;
+﻿namespace FeedHub.Application.UseCases.Feed.Create;
 
 public static class UrlValidator
 {
