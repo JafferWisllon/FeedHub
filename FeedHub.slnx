@@ -7,6 +7,7 @@
     <Project Path="src/Backend/FeedHub.Infrastructure/FeedHub.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/tests/">
-    <Project Path="tests/FeedHub.Tests/FeedHub.Tests.csproj" />
+    <Project Path="tests/UseCases.Tests/UseCases.Tests.csproj" Id="25966e69-86ac-4312-9f50-730996375b34" />
+    <Project Path="tests/Validators.Tests/Validators.Tests.csproj" Id="14e785aa-c03d-4824-80a4-3654355f0207" />
   </Folder>
 </Solution>
