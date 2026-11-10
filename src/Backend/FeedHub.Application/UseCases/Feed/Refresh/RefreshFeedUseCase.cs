@@ -1,7 +1,7 @@
 ﻿using FeedHub.Application.Dtos;
 using FeedHub.Application.Exceptions;
-using FeedHub.Application.Services;
 using FeedHub.Domain.Repositories;
+using FeedHub.Domain.Rss;
 
 namespace FeedHub.Application.UseCases.Feed.Refresh;
 

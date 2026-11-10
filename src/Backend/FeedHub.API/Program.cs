@@ -1,7 +1,7 @@
 using FeedHub.API.Middlewares;
-using FeedHub.Infrastructure.Data;
 using FeedHub.Application;
 using Scalar.AspNetCore;
+using FeedHub.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 

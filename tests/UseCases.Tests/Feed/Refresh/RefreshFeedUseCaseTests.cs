@@ -1,7 +1,7 @@
 ﻿using FeedHub.Application.Exceptions;
-using FeedHub.Application.Services;
 using FeedHub.Application.UseCases.Feed.Refresh;
 using FeedHub.Domain.Repositories;
+using FeedHub.Domain.Rss;
 using NSubstitute;
 using Shouldly;
 
