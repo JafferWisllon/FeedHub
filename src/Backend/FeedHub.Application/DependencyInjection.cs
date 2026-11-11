@@ -1,4 +1,5 @@
-﻿using FeedHub.Application.Services;
+﻿using FeedHub.Application.UseCases.Authentication.Login;
+using FeedHub.Application.UseCases.Authentication.Register;
 using FeedHub.Application.UseCases.Feed.Create;
 using FeedHub.Application.UseCases.Feed.GetById;
 using FeedHub.Application.UseCases.Feed.GetFeedItems;
@@ -17,7 +18,6 @@ public static class DependencyInjection
     public static void AddApplication(this IServiceCollection services)
     {
         services.AddUseCases();
-        services.AddScoped<IAuthService, AuthService>();
 
     }
     public static void AddAuthentication(this IServiceCollection services, IConfiguration configuration)
@@ -55,5 +55,8 @@ public static class DependencyInjection
         services.AddScoped<IGetFeedItemsUseCase, GetFeedItemsUseCase>();
         services.AddScoped<IListFeedsUseCase, ListFeedsUseCase>();
         services.AddScoped<IRefreshFeedUseCase, RefreshFeedUseCase>();
+
+        services.AddScoped<IRegisterUserAccountUseCase, RegisterUserAccountUseCase>();
+        services.AddScoped<ILoginUseCase, LoginUseCase>();
     }
 }
