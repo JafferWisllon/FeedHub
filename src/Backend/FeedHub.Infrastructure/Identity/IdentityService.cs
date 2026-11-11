@@ -1,4 +1,4 @@
-﻿using FeedHub.Application.Dtos;
+﻿using FeedHub.Domain.Identity;
 using FeedHub.Domain.Models;
 using FeedHub.Exception.ExceptionsBase;
 using Microsoft.AspNetCore.Identity;
@@ -8,35 +8,27 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace FeedHub.Application.Services;
+namespace FeedHub.Infrastructure.Identity;
 
-public class AuthService : IAuthService
+internal class IdentityService : IIdentityService
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IConfiguration _configuration;
-    public AuthService(UserManager<ApplicationUser> userManager, IConfiguration configuration)
+    public IdentityService(UserManager<ApplicationUser> userManager, IConfiguration configuration)
     {
         _userManager = userManager;
         _configuration = configuration;
     }
 
-    public async Task<LoginResponseDto> LoginAsync(LoginRequestDto request)
+    public string CreateJwtToken(string userId, string email)
     {
-        var user = await _userManager.FindByEmailAsync(request.Email);
-        if (user is null)
-            throw new BadRequestException(["Invalid email/password"]);
-
-        var passwordIsValid = await _userManager.CheckPasswordAsync(user, request.Password);
-        if(!passwordIsValid)
-            throw new BadRequestException(["Invalid email/password"]);
-
         var jwtSettings = _configuration.GetSection("JwtConfig");
         var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Secret"]!));
 
         var claims = new List<Claim>
         {
-            new(JwtRegisteredClaimNames.Sub, user.Id),
-            new(JwtRegisteredClaimNames.Email, user.Email),
+            new(JwtRegisteredClaimNames.Sub, userId),
+            new(JwtRegisteredClaimNames.Email, email),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
 
@@ -54,27 +46,42 @@ public class AuthService : IAuthService
         var tokenHandler = new JwtSecurityTokenHandler();
         var token = tokenHandler.CreateToken(tokenDescriptor);
 
-        var jwtToken = tokenHandler.WriteToken(token);
-
-        return new LoginResponseDto { AccessToken = jwtToken };
+        return tokenHandler.WriteToken(token);
     }
 
-    public async Task RegisterAsync(RegisterRequestDto request)
+    public async Task CreateUser(string name, string email, string password)
     {
-        var userExists = await _userManager.FindByEmailAsync(request.Email);
-        if(userExists is not null)
+        var userExists = await _userManager.FindByEmailAsync(email);
+        if (userExists is not null)
         {
-            throw new AlreadyExistsException($"User with email {request.Email} already exists");
+            throw new AlreadyExistsException($"User with email {email} already exists");
         }
 
         var user = new ApplicationUser
         {
-            UserName = request.Name,
-            Email = request.Email
+            UserName = name,
+            Email = email
         };
 
-        var result = await _userManager.CreateAsync(user, request.Password);
+        var result = await _userManager.CreateAsync(user, password);
         if (!result.Succeeded)
             throw new BadRequestException(["Error payload"]);
     }
+
+    public async Task<User?> IsAnUserValid(string email, string password)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user is null)
+            return null;
+
+        var passwordIsValid = await _userManager.CheckPasswordAsync(user, password);
+        if (!passwordIsValid)
+            return null;
+
+        return new User { Id = user.Id };
+    }
+}
+
+internal class ApplicationUser : IdentityUser
+{
 }

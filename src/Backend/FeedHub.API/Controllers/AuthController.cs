@@ -1,5 +1,6 @@
 ﻿using FeedHub.Application.Dtos;
-using FeedHub.Application.Services;
+using FeedHub.Application.UseCases.Authentication.Login;
+using FeedHub.Application.UseCases.Authentication.Register;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FeedHub.API.Controllers;
@@ -9,16 +10,20 @@ namespace FeedHub.API.Controllers;
 public class AuthController : ControllerBase
 {
     [HttpPost("register")]
-    public async Task<IActionResult> Create([FromBody] RegisterRequestDto request, [FromServices] IAuthService service)
+    public async Task<IActionResult> Create(
+        [FromBody] RegisterRequestDto request, 
+        [FromServices] IRegisterUserAccountUseCase useCase)
     {
-       await service.RegisterAsync(request);
-
+       await useCase.Execute(request);
        return Ok(new { Message = "Usuario registrado com sucesso!" });
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginRequestDto request, [FromServices] IAuthService service)
+    public async Task<IActionResult> Login(
+        [FromBody] LoginRequestDto request, 
+        [FromServices] ILoginUseCase useCase
+        )
     {
-        return Ok(await service.LoginAsync(request));
+        return Ok(await useCase.Execute(request));
     }
 }

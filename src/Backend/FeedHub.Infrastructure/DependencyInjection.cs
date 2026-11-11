@@ -1,8 +1,10 @@
-﻿using FeedHub.Domain.Models;
+﻿using FeedHub.Domain.Identity;
+using FeedHub.Domain.Models;
 using FeedHub.Domain.Repositories;
 using FeedHub.Domain.Rss;
 using FeedHub.Infrastructure.Data.Context;
 using FeedHub.Infrastructure.Data.Repositories;
+using FeedHub.Infrastructure.Identity;
 using FeedHub.Infrastructure.Rss;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -21,7 +23,7 @@ public static class DependencyInjection
         });
 
         services.AddRepositories();
-        services.AddRssService();
+        services.AddServices();
 
         services.AddIdentityCore<ApplicationUser>()
             .AddEntityFrameworkStores<ApiDbContext>();
@@ -33,8 +35,9 @@ public static class DependencyInjection
         services.AddScoped<IUnitOfWork, UnitOfWork>();
     }
 
-    public static void AddRssService(this IServiceCollection services)
+    public static void AddServices(this IServiceCollection services)
     {
         services.AddScoped<IRssService, RssService>();
+        services.AddScoped<IIdentityService, IdentityService>();
     }
 }
