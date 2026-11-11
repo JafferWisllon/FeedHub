@@ -1,4 +1,4 @@
-﻿using FeedHub.Application.Dtos;
+﻿using FeedHub.Communication.Requests;
 using FeedHub.Domain.Repositories;
 using FeedHub.Exception.ExceptionsBase;
 
@@ -15,7 +15,7 @@ public class CreateFeedUseCase : ICreateFeedUseCase
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Domain.Models.Feed> Execute(CreateFeedDto request)
+    public async Task<Domain.Models.Feed> Execute(RequestCreateFeed request)
     {
         var urlValid = UrlValidator.ValidateUrl(request.Url);
         if (!urlValid)

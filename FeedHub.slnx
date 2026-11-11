@@ -7,6 +7,7 @@
     <Project Path="src/Backend/FeedHub.Infrastructure/FeedHub.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/src/Shared/">
+    <Project Path="src/Shared/FeedHub.Communication/FeedHub.Communication.csproj" Id="f5003f74-71c8-4052-ae17-767b93f7b67b" />
     <Project Path="src/Shared/FeedHub.Exception/FeedHub.Exception.csproj" Id="2a4c6cac-b449-4873-a0a8-be7f06360ebf" />
   </Folder>
   <Folder Name="/tests/">

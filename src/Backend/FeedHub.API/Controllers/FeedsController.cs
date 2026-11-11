@@ -4,6 +4,7 @@ using FeedHub.Application.UseCases.Feed.GetById;
 using FeedHub.Application.UseCases.Feed.GetFeedItems;
 using FeedHub.Application.UseCases.Feed.List;
 using FeedHub.Application.UseCases.Feed.Refresh;
+using FeedHub.Communication.Requests;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FeedHub.API.Controllers;
@@ -18,7 +19,7 @@ public class FeedsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesDefaultResponseType]
     public async Task<ActionResult> Create([FromServices] ICreateFeedUseCase useCase, 
-        [FromBody] CreateFeedDto request)
+        [FromBody] RequestCreateFeed request)
     {
         var feed = await useCase.Execute(request);
         return CreatedAtAction(nameof(Get), new { id = feed.Id }, feed);  

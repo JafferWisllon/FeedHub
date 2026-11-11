@@ -1,6 +1,7 @@
-﻿using FeedHub.Application.Dtos;
-using FeedHub.Application.UseCases.Authentication.Login;
+﻿using FeedHub.Application.UseCases.Authentication.Login;
 using FeedHub.Application.UseCases.Authentication.Register;
+using FeedHub.Communication.Requests;
+using FeedHub.Exception.ExceptionsBase;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FeedHub.API.Controllers;
@@ -10,8 +11,11 @@ namespace FeedHub.API.Controllers;
 public class AuthController : ControllerBase
 {
     [HttpPost("register")]
+    [ProducesResponseType(typeof(AlreadyExistsException), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(BadRequestException), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> Create(
-        [FromBody] RegisterRequestDto request, 
+        [FromBody] RequestRegisterUserAccount request, 
         [FromServices] IRegisterUserAccountUseCase useCase)
     {
        await useCase.Execute(request);
@@ -19,8 +23,10 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
+    [ProducesResponseType(typeof(BadRequestException), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> Login(
-        [FromBody] LoginRequestDto request, 
+        [FromBody] RequestLogin request, 
         [FromServices] ILoginUseCase useCase
         )
     {

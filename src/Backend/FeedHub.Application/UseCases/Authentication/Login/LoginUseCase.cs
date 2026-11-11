@@ -1,4 +1,5 @@
-﻿using FeedHub.Application.Dtos;
+﻿using FeedHub.Communication.Requests;
+using FeedHub.Communication.Responses;
 using FeedHub.Domain.Identity;
 using FeedHub.Exception.ExceptionsBase;
 
@@ -11,7 +12,7 @@ public class LoginUseCase : ILoginUseCase
     public LoginUseCase(IIdentityService identityService) 
         => _identityService = identityService;
 
-    public async Task<LoginResponseDto> Execute(LoginRequestDto request)
+    public async Task<ResponseLogin> Execute(RequestLogin request)
     {
         var user = await _identityService.IsAnUserValid(request.Email, request.Password);
         if (user is null)
@@ -19,6 +20,6 @@ public class LoginUseCase : ILoginUseCase
 
         var jwtToken = _identityService.CreateJwtToken(user.Id, request.Email);
 
-        return new LoginResponseDto { AccessToken = jwtToken };
+        return new ResponseLogin { AccessToken = jwtToken };
     }
 }

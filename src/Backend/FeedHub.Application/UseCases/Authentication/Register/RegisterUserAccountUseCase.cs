@@ -1,4 +1,4 @@
-﻿using FeedHub.Application.Dtos;
+﻿using FeedHub.Communication.Requests;
 using FeedHub.Domain.Identity;
 
 namespace FeedHub.Application.UseCases.Authentication.Register;
@@ -10,6 +10,6 @@ public class RegisterUserAccountUseCase : IRegisterUserAccountUseCase
     public RegisterUserAccountUseCase(IIdentityService identityService) 
         => _identityService = identityService;
 
-    public async Task Execute(RegisterRequestDto request) 
+    public async Task Execute(RequestRegisterUserAccount request) 
         => await _identityService.CreateUser(request.Name, request.Email, request.Password);
 }

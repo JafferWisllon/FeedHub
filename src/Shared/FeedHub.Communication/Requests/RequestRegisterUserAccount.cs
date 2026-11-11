@@ -1,6 +1,6 @@
-﻿namespace FeedHub.Application.Dtos;
+﻿namespace FeedHub.Communication.Requests;
 
-public class RegisterRequestDto
+public class RequestRegisterUserAccount
 {
     public string Name { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
