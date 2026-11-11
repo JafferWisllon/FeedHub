@@ -1,5 +1,5 @@
-﻿using FeedHub.Application.Dtos;
-using FeedHub.Application.UseCases.Feed.Create;
+﻿using FeedHub.Application.UseCases.Feed.Create;
+using FeedHub.Communication.Requests;
 using FeedHub.Domain.Repositories;
 using FeedHub.Exception.ExceptionsBase;
 using NSubstitute;
@@ -25,7 +25,7 @@ public class CreateFeedUseCaseTests
     public async Task Should_Returns_An_Error_When_AddSync_Receive_An_Invalid_Url()
     {
         // Arrange
-        var request = new CreateFeedDto
+        var request = new RequestCreateFeed
         {
             Name = "feed_name",
             Url = "invalid-url"
@@ -46,7 +46,7 @@ public class CreateFeedUseCaseTests
     public async Task Should_Return_An_Error_When_AddSync_With_Feed_Already_Exists()
     {
         // Arrange
-        var request = new CreateFeedDto
+        var request = new RequestCreateFeed
         {
             Name = "feed_name",
             Url = "https://feed.com"
@@ -69,7 +69,7 @@ public class CreateFeedUseCaseTests
     public async Task Should_Be_Able_Create_New_Feed_When_AddSync()
     {
         // Arrange
-        var request = new CreateFeedDto
+        var request = new RequestCreateFeed
         {
             Name = "feed_name",
             Url = "https://myfeed.com"
